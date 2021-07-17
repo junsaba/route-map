@@ -13,7 +13,7 @@ var xhr = new XMLHttpRequest();
 xhr.responseType = "json";
 xhr.onload = function() {
     data = xhr.response;
-    init()
+    init();
     console.log("json Loaded")
     draw();
 }
@@ -51,7 +51,7 @@ function draw() {
                 coord = pointData["coord"];
                 if ("station" in pointData) {
                     ctx.fillRect(map_x + coord[0] - 10, map_y + coord[1] - 10, 20, 20);
-                    stations.push([pointData["station"], map_x + coord[0], map_y + coord[1] - 15])
+                    stations.push([pointData["station"], map_x + coord[0], map_y + coord[1] - 15]);
                 };
                 if (Number(d3) > 0) {
                     previousCoord = routeData[Number(d3) - 1]["coord"];
