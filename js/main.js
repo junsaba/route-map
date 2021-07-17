@@ -52,16 +52,16 @@ function draw() {
                     ctx.fillRect(map_x + coord[0] - 10, map_y + coord[1] - 10, 20, 20);
                     stations.push([pointData["station"], map_x + coord[0], map_y + coord[1] - 15]);
                 };
-                if (Number(d3) > 0) {
-                    previousCoord = routeData[Number(d3) - 1]["coord"];
-                    ctx.lineTo(map_x + previousCoord[0], map_y + previousCoord[1]);
+                if (Number(d3) < routeData.length - 1) {
+                    nextCoord = routeData[Number(d3) + 1]["coord"];
+                    ctx.lineTo(map_x + nextCoord[0], map_y + nextCoord[1]);
                 };
             };
             ctx.stroke();
         };
     };
+    ctx.fillStyle = "#000";
     for (d1 in stations) {
-        ctx.fillStyle = "#000";
         ctx.fillText(stations[d1][0], stations[d1][1], stations[d1][2]);
     };
 };
