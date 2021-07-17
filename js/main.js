@@ -14,7 +14,6 @@ xhr.responseType = "json";
 xhr.onload = function() {
     data = xhr.response;
     init();
-    console.log("json Loaded")
     draw();
 }
 xhr.open("GET", "data.json");
