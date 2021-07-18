@@ -15,7 +15,8 @@ xhr.onload = function() {
     data = xhr.response;
     init();
     draw();
-}
+};
+
 xhr.open("GET", "data.json");
 xhr.send();
 
