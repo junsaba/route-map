@@ -11,7 +11,12 @@ var mouse_y;
 // data.json
 var xhr = new XMLHttpRequest();
 xhr.responseType = "json";
-xhr.onload = () => data = xhr.response;
+xhr.onload = function() {
+    data = xhr.response;
+    init();
+    draw();
+};
+
 xhr.open("GET", "data.json");
 xhr.send();
 
@@ -24,34 +29,41 @@ function init() {
     ctx.lineWidth = 5;
     ctx.font = "0.75rem sans-serif";
     ctx.textAlign = "center";
-    draw();
 };
 
 
 function draw() {
     ctx.clearRect(canvas.width / 2 * -1, canvas.height / 2 * -1, canvas.width, canvas.height);
-    var station = [];
+    var stations = [];
     for (d1 in data) {
-        ctx.fillStyle = data[d1]["color"];
-        ctx.strokeStyle = data[d1]["color"];
-        for (d2 in data[d1]["point"]) {
+        CompanyData = data[d1];
+        ctx.fillStyle = CompanyData["color"];
+        ctx.strokeStyle = CompanyData["color"];
+        linesData = CompanyData["point"];
+
+        for (d2 in linesData) {
+            routeData = linesData[d2];
             ctx.beginPath();
-            ctx.moveTo(map_x + data[d1]["point"][d2][0]["coord"][0], map_y + data[d1]["point"][d2][0]["coord"][1]);
-            for (d3 in data[d1]["point"][d2]) {
-                if ("station" in data[d1]["point"][d2][d3]) {
-                    ctx.fillRect(map_x + data[d1]["point"][d2][d3]["coord"][0] - 10, map_y + data[d1]["point"][d2][d3]["coord"][1] - 10, 20, 20);
-                    station.push([d1, d2, d3]);
+            ctx.moveTo(map_x + routeData[0]["coord"][0], map_y + routeData[0]["coord"][1]);
+
+            for (d3 in routeData) {
+                pointData = routeData[d3];
+                coord = pointData["coord"];
+                if ("station" in pointData) {
+                    ctx.fillRect(map_x + coord[0] - 10, map_y + coord[1] - 10, 20, 20);
+                    stations.push([pointData["station"], map_x + coord[0], map_y + coord[1] - 15]);
                 };
-                if (!(data[d1]["point"][d2].length == Number(d3) + 1)) {
-                    ctx.lineTo(map_x + data[d1]["point"][d2][Number(d3) + 1]["coord"][0], map_y + data[d1]["point"][d2][Number(d3) + 1]["coord"][1]);
+                if (Number(d3) < routeData.length - 1) {
+                    nextCoord = routeData[Number(d3) + 1]["coord"];
+                    ctx.lineTo(map_x + nextCoord[0], map_y + nextCoord[1]);
                 };
             };
             ctx.stroke();
         };
     };
     ctx.fillStyle = "#000";
-    for (s in station) {
-        ctx.fillText(data[station[s][0]]["point"][station[s][1]][station[s][2]]["station"], map_x + data[station[s][0]]["point"][station[s][1]][station[s][2]]["coord"][0], map_y + data[station[s][0]]["point"][station[s][1]][station[s][2]]["coord"][1] - 15)
+    for (d1 in stations) {
+        ctx.fillText(stations[d1][0], stations[d1][1], stations[d1][2]);
     };
 };
 
@@ -72,6 +84,5 @@ onload = () => {
         };
     };
     canvas.onmouseup = () => canvas.onmousemove = null;
-    init();
 };
 onresize = init;
